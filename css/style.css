@@ -1,0 +1,185 @@
+body{
+    margin:0;
+    padding:30px;
+    background:#f3f6fb;
+    font-family:'Segoe UI',sans-serif;
+    color:#1e293b;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    border-radius:20px;
+    padding:28px;
+    margin-bottom:25px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.06);
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo-box{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.logo{
+    width:65px;
+    height:65px;
+    background:#003f88;
+    color:white;
+    border-radius:16px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:30px;
+    font-weight:bold;
+    border:4px solid #ffcc00;
+}
+
+.hero-box{
+    background:#003f88;
+    color:white;
+    padding:40px;
+    border-radius:22px;
+    margin-bottom:25px;
+}
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:25px;
+}
+
+.menu-card{
+    background:white;
+    border-radius:22px;
+    padding:30px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.06);
+}
+
+.menu-icon{
+    width:80px;
+    height:80px;
+    border-radius:18px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:38px;
+    margin-bottom:20px;
+}
+
+.blue{
+    background:#dbeafe;
+}
+
+.yellow{
+    background:#fef3c7;
+}
+
+h1{
+    margin:0;
+    font-size:38px;
+}
+
+.subtitle{
+    color:#64748b;
+}
+
+button{
+    border:none;
+    background:#003f88;
+    color:white;
+    padding:14px 24px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.yellow-btn{
+    background:#ffcc00;
+    color:black;
+}
+
+a{
+    text-decoration:none;
+}
+
+.footer{
+    text-align:center;
+    margin-top:40px;
+    color:#64748b;
+}
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.filter-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+input,
+select{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #dbe2ea;
+    box-sizing:border-box;
+    font-size:14px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+table th{
+    background:#003f88;
+    color:white;
+    padding:16px;
+    text-align:left;
+}
+
+table td{
+    padding:16px;
+    border-bottom:1px solid #e2e8f0;
+}
+
+.table-container{
+    overflow-x:auto;
+}
+
+.status{
+    padding:6px 14px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.aman{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.menipis{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.kosong{
+    background:#fee2e2;
+    color:#b91c1c;
+}
