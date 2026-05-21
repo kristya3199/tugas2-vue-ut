@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="UTF-8">
@@ -12,7 +13,7 @@
     <link rel="stylesheet"
           href="css/style.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
 </head>
 
@@ -20,20 +21,9 @@
 
 <div id="app" class="container">
 
-    <!-- BUTTON -->
-
-    <a href="index.html">
-
-        <button>
-            ← Kembali ke Dashboard
-        </button>
-
+    <a href="index.html" class="back-btn">
+        ← Kembali ke Dashboard
     </a>
-
-    <br><br>
-
-
-    <!-- CARD -->
 
     <div class="card">
 
@@ -41,254 +31,130 @@
             Manajemen Stok Bahan Ajar SITTA UT
         </h1>
 
-        <p class="subtitle">
+        <p>
             Sistem Pemesanan dan Distribusi Bahan Ajar Universitas Terbuka
         </p>
 
+        <h3>
+            ➕ Tambah Bahan Ajar Baru
+        </h3>
 
-        <!-- FORM -->
+        <div class="form-grid">
 
-        <div class="input-box">
+            <input type="text"
+                   placeholder="Kode Modul"
+                   v-model="form.kode">
 
-            <h3>
-                ➕ Tambah Bahan Ajar Baru
-            </h3>
+            <input type="text"
+                   placeholder="Judul Bahan Ajar"
+                   v-model="form.judul">
 
-            <br>
+            <input type="text"
+                   placeholder="Kategori"
+                   v-model="form.kategori">
 
-            <div class="form-grid">
+            <input type="text"
+                   placeholder="UPBJJ"
+                   v-model="form.upbjj">
 
-                <div>
+            <input type="text"
+                   placeholder="Lokasi Rak"
+                   v-model="form.lokasiRak">
 
-                    <label>Kode Modul</label>
+            <input type="number"
+                   placeholder="Harga"
+                   v-model="form.harga">
 
-                    <input
-                        type="text"
-                        v-model="form.kode"
-                        placeholder="Contoh: MKDU4110">
+            <input type="number"
+                   placeholder="Jumlah Stok"
+                   v-model="form.qty">
 
-                </div>
-
-
-                <div>
-
-                    <label>Judul Bahan Ajar</label>
-
-                    <input
-                        type="text"
-                        v-model="form.judul"
-                        placeholder="Contoh: Bahasa Indonesia">
-
-                </div>
-
-
-                <div>
-
-                    <label>Kategori</label>
-
-                    <select v-model="form.kategori">
-
-                        <option value="">
-                            Pilih Kategori
-                        </option>
-
-                        <option
-                            v-for="k in kategoriList"
-                            :value="k">
-
-                            {{ k }}
-
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div>
-
-                    <label>UPBJJ</label>
-
-                    <select v-model="form.upbjj">
-
-                        <option value="">
-                            Pilih UPBJJ
-                        </option>
-
-                        <option
-                            v-for="u in upbjjList"
-                            :value="u">
-
-                            {{ u }}
-
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div>
-
-                    <label>Lokasi Rak</label>
-
-                    <input
-                        type="text"
-                        v-model="form.lokasiRak"
-                        placeholder="Contoh: R4-D2">
-
-                </div>
-
-
-                <div>
-
-                    <label>Harga</label>
-
-                    <input
-                        type="number"
-                        v-model="form.harga"
-                        placeholder="Harga">
-
-                </div>
-
-
-                <div>
-
-                    <label>Jumlah Stok</label>
-
-                    <input
-                        type="number"
-                        v-model="form.qty"
-                        placeholder="Jumlah">
-
-                </div>
-
-
-                <div>
-
-                    <label>Safety Stock</label>
-
-                    <input
-                        type="number"
-                        v-model="form.safety"
-                        placeholder="Safety">
-
-                </div>
-
-            </div>
-
-            <br>
-
-            <input
-                type="text"
-                v-model="form.catatanHTML"
-                placeholder="Catatan">
-
-            <br><br>
-
-            <button @click="tambahData">
-
-                Simpan ke Sistem
-
-            </button>
+            <input type="number"
+                   placeholder="Safety Stock"
+                   v-model="form.safety">
 
         </div>
 
+        <textarea
+            placeholder="Catatan"
+            v-model="form.catatan">
+        </textarea>
 
-        <br>
+        <br><br>
 
+        <button @click="tambahData">
+            Simpan ke Sistem
+        </button>
 
-        <!-- FILTER -->
+        <br><br>
 
-        <div class="filter-box-modern">
+        <div class="filter-box">
 
-            <div class="filter-grid">
+            <select v-model="filterUpbjj">
 
-                <div>
+                <option value="">
+                    Semua UPBJJ
+                </option>
 
-                    <label>Filter UPBJJ</label>
+                <option>
+                    Jakarta
+                </option>
 
-                    <select v-model="selectedUPBJJ">
+                <option>
+                    Surabaya
+                </option>
 
-                        <option value="">
-                            Semua UPBJJ
-                        </option>
+                <option>
+                    Makassar
+                </option>
 
-                        <option
-                            v-for="u in upbjjList"
-                            :value="u">
+            </select>
 
-                            {{ u }}
+            <select v-model="filterKategori">
 
-                        </option>
+                <option value="">
+                    Semua Kategori
+                </option>
 
-                    </select>
+                <option>
+                    MK Wajib
+                </option>
 
-                </div>
+                <option>
+                    MK Pilihan
+                </option>
 
+                <option>
+                    Praktikum
+                </option>
 
-                <div>
+            </select>
 
-                    <label>Filter Kategori</label>
+            <select v-model="sortBy">
 
-                    <select v-model="selectedKategori">
+                <option value="">
+                    Default
+                </option>
 
-                        <option value="">
-                            Semua Kategori
-                        </option>
+                <option value="stok">
+                    Urutkan Stok
+                </option>
 
-                        <option
-                            v-for="k in kategoriList"
-                            :value="k">
+                <option value="judul">
+                    Urutkan Judul
+                </option>
 
-                            {{ k }}
+                <option value="harga">
+                    Urutkan Harga
+                </option>
 
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div>
-
-                    <label>Urutkan</label>
-
-                    <select v-model="sortBy">
-
-                        <option value="">
-                            Default
-                        </option>
-
-                        <option value="judul">
-                            Judul
-                        </option>
-
-                        <option value="qty">
-                            Qty
-                        </option>
-
-                        <option value="harga">
-                            Harga
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
+            </select>
 
         </div>
 
+        <table>
 
-        <br>
-
-
-        <!-- TABLE -->
-
-        <div class="table-container">
-
-            <table>
+            <thead>
 
                 <tr>
 
@@ -305,10 +171,11 @@
 
                 </tr>
 
+            </thead>
 
-                <tr
-                    v-for="item in filteredStok"
-                    :key="item.kode">
+            <tbody>
+
+                <tr v-for="(item, index) in filteredData">
 
                     <td>{{ item.kode }}</td>
 
@@ -324,58 +191,33 @@
 
                     <td>{{ item.qty }}</td>
 
-
-                    <!-- STATUS -->
-
                     <td>
 
                         <span
-                            v-if="item.qty == 0"
-                            class="status kosong">
+                            class="status"
+                            :class="getStatusClass(item.qty, item.safety)">
 
-                            Kosong
-
-                        </span>
-
-
-                        <span
-                            v-else-if="item.qty < item.safety"
-                            class="status menipis">
-
-                            Menipis
-
-                        </span>
-
-
-                        <span
-                            v-else
-                            class="status aman">
-
-                            Aman
+                            {{ getStatus(item.qty, item.safety) }}
 
                         </span>
 
                     </td>
 
+                    <td>{{ item.catatan }}</td>
 
-                    <td v-html="item.catatanHTML"></td>
-
-
-                    <!-- AKSI -->
-
-                    <td>
+                    <td class="aksi-btn">
 
                         <button
-                            @click="editStok(item)"
-                            class="edit-btn">
+                            class="btn-edit"
+                            @click="editData(item, index)">
 
                             Edit
 
                         </button>
 
                         <button
-                            @click="restok(item)"
-                            class="restok-btn">
+                            class="btn-tambah"
+                            @click="tambahStok(item)">
 
                             +10
 
@@ -385,16 +227,16 @@
 
                 </tr>
 
-            </table>
+            </tbody>
 
-        </div>
+        </table>
 
     </div>
 
 </div>
 
-<script src="js/dataBahanAjar.js"></script>
 <script src="js/stok-app.js"></script>
 
 </body>
+
 </html>

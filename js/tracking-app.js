@@ -1,107 +1,94 @@
-new Vue({
+const { createApp } = Vue;
 
-    el: '#app',
+createApp({
 
-    data: {
+    data() {
 
-        pengirimanList: [
+        return {
 
-            {
-                kode: "REG",
-                nama: "JNE Regular"
+            selectedPaket: "",
+
+            searchDO: "",
+
+            hasilTracking: null,
+
+            daftarPaket: [
+
+                {
+                    kode: "PAKET-UT-001",
+                    nama: "Paket IPS Dasar",
+                    harga: 120000
+                },
+
+                {
+                    kode: "PAKET-UT-002",
+                    nama: "Paket Matematika",
+                    harga: 150000
+                },
+
+                {
+                    kode: "PAKET-UT-003",
+                    nama: "Paket Bahasa Inggris",
+                    harga: 175000
+                }
+
+            ],
+
+            form: {
+
+                nim: "",
+                nama: "",
+                ekspedisi: "",
+                tanggal: ""
+
             },
 
-            {
-                kode: "EXP",
-                nama: "JNE Express"
-            },
+            deliveryOrders: [
 
-            {
-                kode: "POS",
-                nama: "POS Indonesia"
-            }
+                {
+                    no_do: "DO2025-001",
+                    nim: "123456789",
+                    nama: "Rina Wulandari",
+                    ekspedisi: "JNE Regular",
+                    paket: "PAKET-UT-001",
+                    tanggal: "2025-05-17",
+                    total: 120000
+                }
 
-        ],
+            ]
 
-        paket: [
-
-            {
-                kode: "PAKET-UT-001",
-                harga: 120000
-            },
-
-            {
-                kode: "PAKET-UT-002",
-                harga: 140000
-            }
-
-        ],
-
-        deliveryOrder: [
-
-            {
-                noDO: "DO2025-001",
-                nim: "123456789",
-                nama: "Rina Wulandari",
-                ekspedisi: "JNE Regular",
-                paket: "PAKET-UT-001",
-                tanggal: "2025-05-17",
-                total: 120000
-            }
-
-        ],
-
-        form: {
-
-            nim: "",
-            nama: "",
-            ekspedisi: "",
-            paket: "",
-            tanggal: ""
-
-        }
+        };
 
     },
 
     methods: {
 
-        tambahDO(){
+        generateDO() {
 
-            if(
+            let nomor = this.deliveryOrders.length + 1;
 
-                this.form.nim == "" ||
-                this.form.nama == "" ||
-                this.form.ekspedisi == "" ||
-                this.form.paket == "" ||
-                this.form.tanggal == ""
+            return `DO2025-${String(nomor).padStart(3, '0')}`;
 
-            ){
+        },
 
-                alert("Semua field wajib diisi");
+        tambahDO() {
+
+            if (
+                !this.form.nim ||
+                !this.form.nama ||
+                !this.form.ekspedisi ||
+                !this.form.tanggal ||
+                !this.selectedPaket
+            ) {
+
+                alert("Semua data wajib diisi!");
 
                 return;
-
             }
 
-            const nomorBaru =
-                "DO2025-00" + (this.deliveryOrder.length + 1);
+            const dataBaru = {
 
-            let hargaPaket = 0;
-
-            const cariPaket =
-                this.paket.find(
-                    p => p.kode == this.form.paket
-                );
-
-            if(cariPaket){
-
-                hargaPaket = cariPaket.harga;
-
-            }
-
-            this.deliveryOrder.push({
-
-                noDO: nomorBaru,
+                no_do: this.generateDO(),
 
                 nim: this.form.nim,
 
@@ -109,26 +96,47 @@ new Vue({
 
                 ekspedisi: this.form.ekspedisi,
 
-                paket: this.form.paket,
+                paket: this.selectedPaket.kode,
 
                 tanggal: this.form.tanggal,
 
-                total: hargaPaket
+                total: this.selectedPaket.harga
 
-            });
+            };
+
+            this.deliveryOrders.push(dataBaru);
+
+            alert("Delivery Order berhasil ditambahkan!");
 
             this.form = {
 
                 nim: "",
                 nama: "",
                 ekspedisi: "",
-                paket: "",
                 tanggal: ""
 
             };
+
+            this.selectedPaket = "";
+
+        },
+
+        cariDO() {
+
+            this.hasilTracking = this.deliveryOrders.find(
+
+                item => item.no_do === this.searchDO
+
+            );
+
+            if (!this.hasilTracking) {
+
+                alert("Nomor DO tidak ditemukan!");
+
+            }
 
         }
 
     }
 
-});
+}).mount("#app");

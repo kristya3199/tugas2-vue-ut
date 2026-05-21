@@ -1,88 +1,78 @@
-new Vue({
+const app = Vue.createApp({
 
-    el: '#app',
+    data() {
 
-    data: {
+        return {
 
-        kategoriList: [
-            "MK Wajib",
-            "MK Pilihan",
-            "Praktikum"
-        ],
+            bahanAjar: [
 
-        upbjjList: [
-            "Jakarta",
-            "Surabaya",
-            "Makassar"
-        ],
+                {
+                    kode: "EKMA4116",
+                    judul: "Pengantar Manajemen",
+                    kategori: "MK Wajib",
+                    upbjj: "Jakarta",
+                    lokasiRak: "R1-A3",
+                    harga: 65000,
+                    qty: 28,
+                    safety: 5,
+                    catatan: "Edisi 2024, cetak ulang"
+                },
 
-        stokData: [
+                {
+                    kode: "EKMA4115",
+                    judul: "Pengantar Akuntansi",
+                    kategori: "MK Wajib",
+                    upbjj: "Jakarta",
+                    lokasiRak: "R1-A4",
+                    harga: 60000,
+                    qty: 7,
+                    safety: 5,
+                    catatan: "Cover baru"
+                },
 
-            {
-                kode: "EKMA4116",
-                judul: "Pengantar Manajemen",
-                kategori: "MK Wajib",
-                upbjj: "Jakarta",
-                lokasiRak: "R1-A3",
-                harga: 65000,
-                qty: 28,
-                safety: 20,
-                catatanHTML: "<i>Edisi 2024, cetak ulang</i>"
+                {
+                    kode: "BIOL4201",
+                    judul: "Biologi Umum",
+                    kategori: "Praktikum",
+                    upbjj: "Surabaya",
+                    lokasiRak: "R3-B2",
+                    harga: 80000,
+                    qty: 12,
+                    safety: 5,
+                    catatan: "Butuh pendingin"
+                },
+
+                {
+                    kode: "FISIP4001",
+                    judul: "Dasar Sosiologi",
+                    kategori: "MK Pilihan",
+                    upbjj: "Makassar",
+                    lokasiRak: "R2-C1",
+                    harga: 55000,
+                    qty: 2,
+                    safety: 5,
+                    catatan: "Stok menipis"
+                }
+
+            ],
+
+            form: {
+
+                kode: "",
+                judul: "",
+                kategori: "",
+                upbjj: "",
+                lokasiRak: "",
+                harga: "",
+                qty: "",
+                safety: "",
+                catatan: ""
+
             },
 
-            {
-                kode: "EKMA4115",
-                judul: "Pengantar Akuntansi",
-                kategori: "MK Wajib",
-                upbjj: "Jakarta",
-                lokasiRak: "R1-A4",
-                harga: 60000,
-                qty: 7,
-                safety: 15,
-                catatanHTML: "<b>Cover baru</b>"
-            },
-
-            {
-                kode: "BIOL4201",
-                judul: "Biologi Umum",
-                kategori: "Praktikum",
-                upbjj: "Surabaya",
-                lokasiRak: "R3-B2",
-                harga: 80000,
-                qty: 12,
-                safety: 10,
-                catatanHTML: "Butuh <u>pendingin</u>"
-            },
-
-            {
-                kode: "FISIP4001",
-                judul: "Dasar Sosiologi",
-                kategori: "MK Pilihan",
-                upbjj: "Makassar",
-                lokasiRak: "R2-C1",
-                harga: 55000,
-                qty: 2,
-                safety: 8,
-                catatanHTML: "Stok <i>menipis</i>"
-            }
-
-        ],
-
-        selectedUPBJJ: "",
-        selectedKategori: "",
-        sortBy: "",
-
-        form: {
-
-            kode: "",
-            judul: "",
-            kategori: "",
-            upbjj: "",
-            lokasiRak: "",
-            harga: "",
-            qty: "",
-            safety: "",
-            catatanHTML: ""
+            filterUpbjj: "",
+            filterKategori: "",
+            sortBy: ""
 
         }
 
@@ -90,53 +80,43 @@ new Vue({
 
     computed: {
 
-        filteredStok(){
+        filteredData() {
 
-            let data = this.stokData;
+            let data = [...this.bahanAjar];
 
-            // FILTER UPBJJ
+            if (this.filterUpbjj) {
 
-            if(this.selectedUPBJJ != ""){
-
-                data = data.filter(item =>
-                    item.upbjj == this.selectedUPBJJ
+                data = data.filter(
+                    item => item.upbjj === this.filterUpbjj
                 );
 
             }
 
-            // FILTER KATEGORI
+            if (this.filterKategori) {
 
-            if(this.selectedKategori != ""){
-
-                data = data.filter(item =>
-                    item.kategori == this.selectedKategori
+                data = data.filter(
+                    item => item.kategori === this.filterKategori
                 );
 
             }
 
-            // SORT
+            if (this.sortBy === "stok") {
 
-            if(this.sortBy == "judul"){
+                data.sort((a, b) => a.qty - b.qty);
 
-                data.sort((a,b)=>
-                    a.judul.localeCompare(b.judul)
+            }
+
+            if (this.sortBy === "judul") {
+
+                data.sort(
+                    (a, b) => a.judul.localeCompare(b.judul)
                 );
 
             }
 
-            else if(this.sortBy == "qty"){
+            if (this.sortBy === "harga") {
 
-                data.sort((a,b)=>
-                    a.qty - b.qty
-                );
-
-            }
-
-            else if(this.sortBy == "harga"){
-
-                data.sort((a,b)=>
-                    a.harga - b.harga
-                );
+                data.sort((a, b) => a.harga - b.harga);
 
             }
 
@@ -148,38 +128,19 @@ new Vue({
 
     methods: {
 
-        tambahData(){
+        tambahData() {
 
-            if(
-
-                this.form.kode == "" ||
-                this.form.judul == "" ||
-                this.form.kategori == "" ||
-                this.form.upbjj == "" ||
-                this.form.lokasiRak == "" ||
-                this.form.harga == "" ||
-                this.form.qty == "" ||
-                this.form.safety == ""
-
-            ){
-
-                alert("Semua field wajib diisi");
-
-                return;
-
-            }
-
-            this.stokData.push({
+            this.bahanAjar.push({
 
                 kode: this.form.kode,
                 judul: this.form.judul,
                 kategori: this.form.kategori,
                 upbjj: this.form.upbjj,
                 lokasiRak: this.form.lokasiRak,
-                harga: parseInt(this.form.harga),
-                qty: parseInt(this.form.qty),
-                safety: parseInt(this.form.safety),
-                catatanHTML: this.form.catatanHTML
+                harga: Number(this.form.harga),
+                qty: Number(this.form.qty),
+                safety: Number(this.form.safety),
+                catatan: this.form.catatan
 
             });
 
@@ -193,38 +154,93 @@ new Vue({
                 harga: "",
                 qty: "",
                 safety: "",
-                catatanHTML: ""
-
-            };
-
-        },
-
-        // EDIT STOK
-
-        editStok(item){
-
-            const jumlahBaru =
-                prompt(
-                    "Edit jumlah stok:",
-                    item.qty
-                );
-
-            if(jumlahBaru !== null){
-
-                item.qty = parseInt(jumlahBaru);
+                catatan: ""
 
             }
 
         },
 
-        // RESTOK
+        editData(item) {
 
-        restok(item){
+            let stokBaru = prompt(
+                "Edit jumlah stok:",
+                item.qty
+            );
+
+            if (stokBaru !== null) {
+
+                item.qty = Number(stokBaru);
+
+            }
+
+            this.form = {
+
+                kode: "",
+                judul: "",
+                kategori: "",
+                upbjj: "",
+                lokasiRak: "",
+                harga: "",
+                qty: "",
+                safety: "",
+                catatan: ""
+
+            }
+
+        },
+
+        tambahStok(item) {
 
             item.qty += 10;
+
+        },
+
+        getStatus(qty, safety) {
+
+            if (qty <= 0) {
+
+                return "Kosong";
+
+            }
+
+            else if (qty <= safety) {
+
+                return "Menipis";
+
+            }
+
+            else {
+
+                return "Aman";
+
+            }
+
+        },
+
+        getStatusClass(qty, safety) {
+
+            if (qty <= 0) {
+
+                return "status-kosong";
+
+            }
+
+            else if (qty <= safety) {
+
+                return "status-menipis";
+
+            }
+
+            else {
+
+                return "status-aman";
+
+            }
 
         }
 
     }
 
 });
+
+app.mount("#app");

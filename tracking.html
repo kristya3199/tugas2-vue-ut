@@ -1,212 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Tracking Delivery Order</title>
 
-    <link rel="stylesheet"
-          href="css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 
 <body>
 
-<div id="app" class="container">
+<div id="app">
 
-    <!-- BUTTON -->
+    <div class="container">
 
-    <a href="index.html">
-
-        <button>
+        <a href="index.html" class="back-btn">
             ← Kembali ke Dashboard
-        </button>
+        </a>
 
-    </a>
+        <div class="card">
 
-    <br><br>
+            <h1>Tracking Delivery Order (DO) - UT</h1>
 
+            <p class="subtitle">
+                Lacak pengiriman bahan ajar mahasiswa Universitas Terbuka
+            </p>
 
-    <!-- CARD -->
-
-    <div class="card">
-
-        <h1>
-            Tracking Delivery Order (DO) - UT
-        </h1>
-
-        <p class="subtitle">
-            Lacak pengiriman bahan ajar mahasiswa Universitas Terbuka
-        </p>
-
-
-        <!-- FORM -->
-
-        <div class="input-box">
-
-            <h3>
+            <h3 class="section-title">
                 ➕ Tambah Delivery Order
             </h3>
 
-            <br>
-
             <div class="form-grid">
 
-                <!-- NIM -->
-
-                <div>
-
+                <div class="form-group">
                     <label>NIM</label>
 
                     <input
                         type="text"
                         v-model="form.nim"
-                        placeholder="Masukkan NIM">
-
+                        placeholder="Masukkan NIM"
+                    >
                 </div>
 
-
-                <!-- NAMA -->
-
-                <div>
-
+                <div class="form-group">
                     <label>Nama Mahasiswa</label>
 
                     <input
                         type="text"
                         v-model="form.nama"
-                        placeholder="Nama Mahasiswa">
-
+                        placeholder="Nama Mahasiswa"
+                    >
                 </div>
 
-
-                <!-- EKSPEDISI -->
-
-                <div>
-
+                <div class="form-group">
                     <label>Ekspedisi</label>
 
                     <select v-model="form.ekspedisi">
-
-                        <option value="">
-                            Pilih Ekspedisi
-                        </option>
-
-                        <option
-                            v-for="e in pengirimanList"
-                            :key="e.kode"
-                            :value="e.nama">
-
-                            {{ e.nama }}
-
-                        </option>
-
+                        <option value="">Pilih Ekspedisi</option>
+                        <option>JNE Regular</option>
+                        <option>JNE Express</option>
+                        <option>J&T</option>
+                        <option>SiCepat</option>
                     </select>
-
                 </div>
 
-
-                <!-- PAKET -->
-
-                <div>
-
+                <div class="form-group">
                     <label>Paket</label>
 
-                    <select v-model="form.paket">
-
-                        <option value="">
-                            Pilih Paket
-                        </option>
+                    <select v-model="selectedPaket">
+                        <option value="">Pilih Paket</option>
 
                         <option
-                            v-for="p in paket"
-                            :key="p.kode"
-                            :value="p.kode">
-
-                            {{ p.kode }}
-
+                            v-for="paket in daftarPaket"
+                            :key="paket.kode"
+                            :value="paket"
+                        >
+                            {{ paket.kode }} - {{ paket.nama }}
                         </option>
-
                     </select>
-
                 </div>
 
-
-                <!-- TANGGAL -->
-
-                <div>
-
+                <div class="form-group">
                     <label>Tanggal Kirim</label>
 
                     <input
                         type="date"
-                        v-model="form.tanggal">
-
+                        v-model="form.tanggal"
+                    >
                 </div>
 
             </div>
 
-            <br>
-
-            <button @click="tambahDO">
-
+            <button
+                class="btn-primary"
+                @click="tambahDO"
+            >
                 Tambah Delivery Order
-
             </button>
 
         </div>
 
+        <!-- DETAIL PAKET -->
 
-        <br><br>
+        <div
+            class="card"
+            v-if="selectedPaket"
+        >
 
+            <h2>Detail Paket Terpilih</h2>
 
-        <!-- TABLE -->
+            <p>
+                <strong>Kode:</strong>
+                {{ selectedPaket.kode }}
+            </p>
 
-        <div class="table-container">
+            <p>
+                <strong>Nama:</strong>
+                {{ selectedPaket.nama }}
+            </p>
+
+            <p>
+                <strong>Harga:</strong>
+                Rp {{ selectedPaket.harga.toLocaleString() }}
+            </p>
+
+        </div>
+
+        <!-- TABEL DO -->
+
+        <div class="card">
+
+            <h2>Data Delivery Order</h2>
 
             <table>
 
-                <tr>
+                <thead>
 
-                    <th>No DO</th>
-                    <th>NIM</th>
-                    <th>Nama</th>
-                    <th>Ekspedisi</th>
-                    <th>Paket</th>
-                    <th>Tanggal Kirim</th>
-                    <th>Total</th>
+                    <tr>
+                        <th>No DO</th>
+                        <th>NIM</th>
+                        <th>Nama</th>
+                        <th>Ekspedisi</th>
+                        <th>Paket</th>
+                        <th>Tanggal Kirim</th>
+                        <th>Total</th>
+                    </tr>
 
-                </tr>
+                </thead>
 
+                <tbody>
 
-                <tr
-                    v-for="item in deliveryOrder"
-                    :key="item.noDO">
+                    <tr
+                        v-for="item in deliveryOrders"
+                        :key="item.no_do"
+                    >
 
-                    <td>{{ item.noDO }}</td>
+                        <td>{{ item.no_do }}</td>
+                        <td>{{ item.nim }}</td>
+                        <td>{{ item.nama }}</td>
+                        <td>{{ item.ekspedisi }}</td>
+                        <td>{{ item.paket }}</td>
+                        <td>{{ item.tanggal }}</td>
 
-                    <td>{{ item.nim }}</td>
+                        <td>
+                            Rp {{ item.total.toLocaleString() }}
+                        </td>
 
-                    <td>{{ item.nama }}</td>
+                    </tr>
 
-                    <td>{{ item.ekspedisi }}</td>
-
-                    <td>{{ item.paket }}</td>
-
-                    <td>{{ item.tanggal }}</td>
-
-                    <td>Rp {{ item.total }}</td>
-
-                </tr>
+                </tbody>
 
             </table>
+
+        </div>
+
+        <!-- TRACKING -->
+
+        <div class="card">
+
+            <h2>Tracking Delivery Order</h2>
+
+            <p>
+                Cari nomor DO untuk melihat status dan riwayat perjalanan paket.
+            </p>
+
+            <div class="tracking-search">
+
+                <input
+                    type="text"
+                    v-model="searchDO"
+                    placeholder="Contoh: DO2025-001"
+                >
+
+                <button
+                    class="btn-primary"
+                    @click="cariDO"
+                >
+                    Cari DO
+                </button>
+
+            </div>
+
+            <div
+                v-if="hasilTracking"
+                class="tracking-result"
+            >
+
+                <h2>{{ hasilTracking.no_do }}</h2>
+
+                <p>
+                    <strong>NIM:</strong>
+                    {{ hasilTracking.nim }}
+                </p>
+
+                <p>
+                    <strong>Nama:</strong>
+                    {{ hasilTracking.nama }}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+
+                    <span class="status">
+                        Dalam Perjalanan
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Ekspedisi:</strong>
+                    {{ hasilTracking.ekspedisi }}
+                </p>
+
+                <p>
+                    <strong>Tanggal Kirim:</strong>
+                    {{ hasilTracking.tanggal }}
+                </p>
+
+                <p>
+                    <strong>Paket:</strong>
+                    {{ hasilTracking.paket }}
+                </p>
+
+                <p>
+                    <strong>Total:</strong>
+                    Rp {{ hasilTracking.total.toLocaleString() }}
+                </p>
+
+                <h3>Riwayat Perjalanan</h3>
+
+                <ul class="tracking-list">
+
+                    <li>Paket diproses di gudang UT</li>
+
+                    <li>Paket diterima ekspedisi</li>
+
+                    <li>Paket sedang dalam perjalanan</li>
+
+                </ul>
+
+            </div>
 
         </div>
 
@@ -214,8 +269,6 @@
 
 </div>
 
-
-<script src="js/dataBahanAjar.js"></script>
 <script src="js/tracking-app.js"></script>
 
 </body>
